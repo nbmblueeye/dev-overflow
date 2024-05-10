@@ -1,4 +1,5 @@
 'use client'
+import { createUser } from '@/backend/controllers/user.controller'
 import FilterHome from '@/components/shares/FilterHome'
 import FilterSelect from '@/components/shares/FilterSelect'
 import MetaTag from '@/components/shares/MetaTag'
@@ -7,9 +8,10 @@ import LocalSearch from '@/components/shares/searchs/LocalSearch'
 import { Button } from '@/components/ui/button'
 import { questionCards } from '@/constants'
 
-export default function Home () {
-  return (
 
+export default function Home () {
+
+  return (
     <div className="flex w-full flex-col gap-10">
       <div className="flex w-full flex-wrap items-center justify-between gap-10">
         <h2 className="text-light900_dark100 font-inter text-3xl font-bold">All Questions</h2>
@@ -84,6 +86,5 @@ export default function Home () {
           }
       </div>
     </div>
-
   )
 }
