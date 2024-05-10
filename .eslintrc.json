@@ -1,3 +1,14 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "standard", "plugin:tailwindcss/recommended"],
+  "rules": {
+    "tailwindcss/no-custom-classname": ["<enabled>", {
+      "callees": "Array<string>",
+      "config": "<string>|<object>",
+      "cssFiles": "Array<string>",
+      "cssFilesRefreshRate":" <number>",
+      "skipClassAttribute": "<boolean>",
+      "tags": "Array<string>",
+      "whitelist": "Array<string>",
+    }]
+  }
 }

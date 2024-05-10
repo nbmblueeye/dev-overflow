@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities{
+  
+    .background-light900_dark100{
+        @apply bg-light-900 dark:bg-dark-100
+    }
+    
+    .background-light800_dark200{
+        @apply bg-light-800 dark:bg-dark-200
+    }
+
+    .background-light800_dark300{
+        @apply bg-light-800 dark:bg-dark-300
+    }
+
+    .text-light900_dark100{
+        @apply text-dark-100 dark:text-light-900
+    }
+
+    .text-light800_dark200{
+        @apply text-dark-200 dark:text-light-800
+    }
+
+    .text-light900_dark300{
+        @apply text-dark-300 dark:text-light-900
+    }
+
+
+    .text-light500_dark400{
+        @apply text-dark-400 dark:text-light-400 !important;
+    }
+
+    .border-light800_dark200{
+        @apply border-light-800 dark:border-dark-200
+    }
+
+    .border-light700_dark400{
+        @apply border-light-700 dark:border-dark-400
+    }
+
+    .dark-gradient{
+        background: linear-gradient(267.08deg, rgba(23, 28, 35, 0.406) 10.27%, rgba(19, 22, 28, 0.7) 88.57%);
+    }
+
+    .hover-light700_dark400{
+        @apply cursor-pointer hover:bg-light-700 dark:hover:bg-dark-400 !important;
+    }
+}
