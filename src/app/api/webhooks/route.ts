@@ -1,3 +1,4 @@
+'use server'
 /* eslint-disable camelcase */
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
@@ -53,7 +54,7 @@ export async function POST (req: Request) {
   console.log(evt.data)
 
   if (evt.type === 'user.created') {
-    console.log('User Created')
+    console.log('Created a user')
     const { id, email_addresses, username, first_name, last_name, image_url } = evt.data
     const user = createUser({
       clerkId: id,
@@ -67,7 +68,7 @@ export async function POST (req: Request) {
   }
 
   if (evt.type === 'user.updated') {
-    console.log('User updated')
+    console.log('updated a User')
     const { id, email_addresses, username, first_name, last_name, image_url } = evt.data
     const user = updateUser({
       clerkId: id,
