@@ -5,7 +5,7 @@ import User from '../models/User'
 import { createUserParams, deleteUserParams, updateUserParams } from '../type'
 import Question from '../models/Question'
 
-const createUser = async (params: createUserParams) => {
+export async function createUser (params: createUserParams) {
   try {
     connectToMongoDB()
     const user = await User.create(params)
@@ -16,7 +16,7 @@ const createUser = async (params: createUserParams) => {
   }
 }
 
-const updateUser = async (params: updateUserParams) => {
+export async function updateUser (params: updateUserParams) {
   const { clerkId, updateData, path } = params
   try {
     connectToMongoDB()
@@ -36,7 +36,7 @@ const updateUser = async (params: updateUserParams) => {
   }
 }
 
-const deleteUser = async (params: deleteUserParams) => {
+export async function deleteUser (params: deleteUserParams) {
   const { clerkId, path } = params
   try {
     connectToMongoDB()
@@ -60,7 +60,7 @@ const deleteUser = async (params: deleteUserParams) => {
   }
 }
 
-const getAllUsers = async () => {
+export async function getAllUsers () {
   try {
     connectToMongoDB()
     const users = await User.find({})
@@ -69,5 +69,3 @@ const getAllUsers = async () => {
     throw new Error('Error Creating User: ' + error)
   }
 }
-
-export { createUser, updateUser, deleteUser, getAllUsers }
