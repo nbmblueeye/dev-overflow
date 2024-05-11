@@ -58,7 +58,6 @@ const deleteUser = async(params: deleteUserParams) => {
         await Question.deleteMany({author: isUserExist._id})
 
         const user = await User.findByIdAndDelete(isUserExist._id)
-
         revalidatePath(path);
 
         return user;

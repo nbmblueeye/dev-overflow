@@ -7,7 +7,7 @@ const connectToMongoDB = async() => {
 
     mongoose.set('strictQuery', true);
 
-    if(!process.env.NEXT_PUBLIC_MONGODB_URI){
+    if(!process.env.NEXT_MONGODB_URI){
         throw new Error("MongoDB URL must be provided");
     }
 
@@ -17,7 +17,7 @@ const connectToMongoDB = async() => {
     }
 
     try {
-        const db = await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB_URI, { dbName: "devOverFlow"});
+        const db = await mongoose.connect(process.env.NEXT_MONGODB_URI, { dbName: "devOverFlow"});
         isConnected = true;
         console.log(`Connected to ${db.connection.host}`.cyan.underline);
     } catch (error) {
