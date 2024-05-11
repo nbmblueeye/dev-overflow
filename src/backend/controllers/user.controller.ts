@@ -5,7 +5,7 @@ import User from '../models/User'
 import { createUserParams, deleteUserParams, updateUserParams } from '../type'
 import Question from '../models/Question'
 
-export async function createUser (params: createUserParams) {
+export const createUser = async (params: createUserParams) => {
   try {
     connectToMongoDB()
     const user = await User.create(params)
@@ -16,7 +16,7 @@ export async function createUser (params: createUserParams) {
   }
 }
 
-export async function updateUser (params: updateUserParams) {
+export const updateUser = async (params: updateUserParams) => {
   const { clerkId, updateData, path } = params
   try {
     connectToMongoDB()
@@ -36,7 +36,7 @@ export async function updateUser (params: updateUserParams) {
   }
 }
 
-export async function deleteUser (params: deleteUserParams) {
+export const deleteUser = async (params: deleteUserParams) => {
   const { clerkId, path } = params
   try {
     connectToMongoDB()
