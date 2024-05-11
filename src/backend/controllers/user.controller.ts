@@ -59,4 +59,14 @@ const deleteUser = async (params: deleteUserParams) => {
   }
 }
 
-export { createUser, updateUser, deleteUser }
+const getAllUsers = async () => {
+  try {
+    connectToMongoDB()
+    const users = await User.find({})
+    return users
+  } catch (error) {
+    throw new Error('Error Creating User: ' + error)
+  }
+}
+
+export { createUser, updateUser, deleteUser, getAllUsers }
