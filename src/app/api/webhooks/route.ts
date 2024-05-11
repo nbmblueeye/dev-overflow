@@ -57,7 +57,6 @@ export async function POST(req: Request) {
   console.log('Webhook body:', body)
 
   if (evt.type === 'user.created') {
-    
     let { id, email_addresses, username, first_name, last_name, image_url } = evt.data;
     let user = createUser({
         clerkId: id,

@@ -8,7 +8,7 @@
       "cssFilesRefreshRate":" <number>",
       "skipClassAttribute": "<boolean>",
       "tags": "Array<string>",
-      "whitelist": "Array<string>",
+      "whitelist": "Array<string>"
     }]
   }
 }
