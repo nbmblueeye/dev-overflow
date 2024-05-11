@@ -3,16 +3,16 @@ import React from 'react'
 import { Badge } from '../ui/badge'
 import Link from 'next/link'
 
-const RenderTag = ({...tag}) => {
-  return (   
-    <div className="flex flex-row justify-between items-center">
-      <Link href={`tags/${tag._id}`}> 
-        <Badge className={`shadow background-light800_dark300 text-xs font-inter font-medium text-light500_dark400 px-4 py-2 rounded-md uppercase hover-light700_dark400`}>
+const RenderTag = ({ ...tag }) => {
+  return (
+    <div className="flex flex-row items-center justify-between">
+      <Link href={`tags/${tag._id}`}>
+        <Badge className={'background-light800_dark300 text-light500_dark400 hover-light700_dark400 rounded-md px-4 py-2 font-inter text-xs font-medium uppercase shadow'}>
           {tag.name}
         </Badge>
       </Link>
       {
-        tag.showCount && <p className="font-inter font-medium text-xs text-light800_dark200">{tag.totalQuestion}</p>
+        tag.showCount && <p className="text-light800_dark200 font-inter text-xs font-medium">{tag.totalQuestion}</p>
       }
     </div>
   )
