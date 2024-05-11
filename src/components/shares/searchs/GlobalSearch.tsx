@@ -3,21 +3,21 @@ import React from 'react'
 
 const GlobalSearch = () => {
   return (
-    <div className="w-[600px] p-4 background-light800_dark200 rounded-lg border border-light700_dark400 flex flex-row gap-4 max-lg:hidden">
+    <div className="background-light800_dark200 border-light700_dark400 flex w-[600px] flex-row gap-4 rounded-lg border p-4 max-lg:hidden">
       <Image
         src="/assets/icons/search.svg"
         width={24}
         height={24}
         alt="search"
       />
-      <input type="text" 
+      <input type="text"
       className="
-        flex-1
-        bg-transparent 
-        border-none 
-        outline-none no-focus
-        text-base font-normal 
+        no-focus
         text-light800_dark200
+        flex-1
+        border-none bg-transparent
+        text-base font-normal
+        outline-none
         placeholder:text-light-500"
       placeholder="Search anything globally..."
       />

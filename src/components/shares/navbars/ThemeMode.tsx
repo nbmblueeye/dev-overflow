@@ -1,21 +1,19 @@
-'use client';
-import { Button } from "@/components/ui/button"
+'use client'
+import { Button } from '@/components/ui/button'
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import { themes } from "@/constants";
-import { useThemeContext } from "@/context/ThemeContext";
-import Image from "next/image";
+  NavigationMenuTrigger
+} from '@/components/ui/navigation-menu'
+import { themes } from '@/constants'
+import { useThemeContext } from '@/context/ThemeContext'
+import Image from 'next/image'
 
 const ThemeMode = () => {
-
   const { activeTheme, setActiveTheme } = useThemeContext()
-
 
   return (
     <NavigationMenu>
@@ -29,19 +27,19 @@ const ThemeMode = () => {
               alt={activeTheme?.value}
               className="active-theme"
             />
-          
+
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="flex flex-col background-light800_dark200 border border-light700_dark400">
+          <NavigationMenuContent className="background-light800_dark200 border-light700_dark400 flex flex-col border">
             <NavigationMenuLink>
               {
                 themes.map((theme:any, index:any) => (
-                  <Button key={index} className="flex justify-between flex-row min-w-[100px] hover:bg-light-700 dark:hover:bg-dark-400"
+                  <Button key={index} className="flex min-w-[100px] flex-row justify-between hover:bg-light-700 dark:hover:bg-dark-400"
                   onClick={() => {
-                    setActiveTheme(theme);
-                    if(theme.value !== "system"){
-                      localStorage.theme = theme.value;
-                    }else{
-                      localStorage.removeItem('theme');
+                    setActiveTheme(theme)
+                    if (theme.value !== 'system') {
+                      localStorage.theme = theme.value
+                    } else {
+                      localStorage.removeItem('theme')
                     }
                   }}
                   >
@@ -50,9 +48,9 @@ const ThemeMode = () => {
                       width={14}
                       height={14}
                       alt={theme.value}
-                      className={`${theme.value === activeTheme?.value && "active-theme"}`}
-                    /> 
-                    <span className="text-light800_dark200 font-spaceGrotesk font-normal text-sm">{theme.label}</span>
+                      className={`${theme.value === activeTheme?.value && 'active-theme'}`}
+                    />
+                    <span className="text-light800_dark200 font-spaceGrotesk text-sm font-normal">{theme.label}</span>
                   </Button>
                 ))
               }
@@ -60,13 +58,8 @@ const ThemeMode = () => {
           </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
-    </NavigationMenu> 
+    </NavigationMenu>
   )
 }
 
 export default ThemeMode
-
-
-
-
-
