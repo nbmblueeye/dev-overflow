@@ -4,29 +4,28 @@ import React from 'react'
 
 type Props = {
     metaLink:string,
-    iconUrl : string, 
-    textSize : string, 
-    data : string, 
+    iconUrl : string,
+    textSize : string,
+    data : string,
     title : string,
     imageClass : string
 }
 
-const MetaTag = ({metaLink, iconUrl, textSize, data, title, imageClass}:Props) => {
-
-  if(metaLink !== ""){
+const MetaTag = ({ metaLink, iconUrl, textSize, data, title, imageClass }:Props) => {
+  if (metaLink !== '') {
     return (
-        <Link href={ metaLink } className="flex flex-row items-center flex-wrap">
+        <Link href={ metaLink } className="flex flex-row flex-wrap items-center">
             <Image
-                src={iconUrl ? iconUrl:"/assets/icons/avatar.svg"}
+                src={iconUrl || '/assets/icons/avatar.svg'}
                 width={20}
                 height={20}
                 alt="user profile"
                 className={imageClass}
-            /> 
+            />
             &nbsp;
-            <p className={`font-inter text-light900_dark300 ${textSize}`}>
-            {data} 
-            <span className="font-inter font-normal text-xs text-light900_dark300">
+            <p className={`text-light900_dark300 font-inter ${textSize}`}>
+            {data}
+            <span className="text-light900_dark300 font-inter text-xs font-normal">
                {title}
             </span>
             </p>
@@ -35,18 +34,18 @@ const MetaTag = ({metaLink, iconUrl, textSize, data, title, imageClass}:Props) =
   }
 
   return (
-    <div className="flex flex-row items-center flex-wrap">
+    <div className="flex flex-row flex-wrap items-center">
         <Image
-            src={iconUrl ? iconUrl:"/assets/icons/avatar.svg"}
+            src={iconUrl || '/assets/icons/avatar.svg'}
             width={20}
             height={20}
             alt="user profile"
             className={imageClass}
-        /> 
+        />
         &nbsp;
-        <p className={`font-inter text-light900_dark300 ${textSize}`}>
-        {data} 
-        <span className="font-inter font-normal text-xs text-light900_dark300">
+        <p className={`text-light900_dark300 font-inter ${textSize}`}>
+        {data}
+        <span className="text-light900_dark300 font-inter text-xs font-normal">
            {title}
         </span>
         </p>

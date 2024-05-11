@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import { questionCards } from '@/constants'
 
 const Page = () => {
-
   return (
     <div className="flex w-full flex-col gap-10">
       <div className="flex w-full flex-wrap items-center justify-between gap-10">
@@ -87,4 +86,4 @@ const Page = () => {
   )
 }
 
-export default Page 
+export default Page
