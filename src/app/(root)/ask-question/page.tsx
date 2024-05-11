@@ -7,11 +7,9 @@ const page = () => {
       <h1 className="text-light900_dark100 font-inter text-3xl font-bold">
         Ask a public question
       </h1>
-
       <div>
         <FormQuestion/>
       </div>
-
     </div>
   )
 }
