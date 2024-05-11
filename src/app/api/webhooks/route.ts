@@ -50,13 +50,10 @@ export async function POST (req: Request) {
 
   // Do something with the payload
   // For this guide, you simply log the payload to the console
-  const { id } = evt.data
-  const eventType = evt.type
-
-  console.log(`Webhook with and ID of ${id} and type of ${eventType}`)
-  console.log('Webhook body:', body)
+  console.log(evt.data)
 
   if (evt.type === 'user.created') {
+    console.log('User Created')
     const { id, email_addresses, username, first_name, last_name, image_url } = evt.data
     const user = createUser({
       clerkId: id,
@@ -70,6 +67,7 @@ export async function POST (req: Request) {
   }
 
   if (evt.type === 'user.updated') {
+    console.log('User updated')
     const { id, email_addresses, username, first_name, last_name, image_url } = evt.data
     const user = updateUser({
       clerkId: id,
@@ -88,6 +86,7 @@ export async function POST (req: Request) {
   if (evt.type === 'user.deleted') {
     const { id } = evt.data
     const user = deleteUser({ clerkId: id!, path: `profile/${id}` })
+
     return new Response(JSON.stringify(user), { status: 200 })
   }
 

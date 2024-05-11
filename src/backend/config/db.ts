@@ -17,7 +17,7 @@ const connectToMongoDB = async () => {
   try {
     const db = await mongoose.connect(process.env.NEXT_MONGODB_URI, { dbName: 'devOverFlow' })
     isConnected = true
-    console.log(`Connected to ${db.connection.host}`)
+    console.log(`Data base is connected to ${db.connection.host}`)
   } catch (error) {
     console.log('Error connecting to MongoDB', error)
   }

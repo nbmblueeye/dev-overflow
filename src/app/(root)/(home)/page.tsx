@@ -1,4 +1,6 @@
 'use client'
+/* eslint-disable @next/next/no-async-client-component */
+
 import FilterHome from '@/components/shares/FilterHome'
 import FilterSelect from '@/components/shares/FilterSelect'
 import MetaTag from '@/components/shares/MetaTag'
@@ -7,7 +9,14 @@ import LocalSearch from '@/components/shares/searchs/LocalSearch'
 import { Button } from '@/components/ui/button'
 import { questionCards } from '@/constants'
 
-const Page = () => {
+export default function Home () {
+  // useEffect(() => {
+  //   const initUser = async () => {
+  //     await getAllUsers()
+  //   }
+  //   initUser()
+  // }, [])
+
   return (
     <div className="flex w-full flex-col gap-10">
       <div className="flex w-full flex-wrap items-center justify-between gap-10">
@@ -85,5 +94,3 @@ const Page = () => {
     </div>
   )
 }
-
-export default Page
