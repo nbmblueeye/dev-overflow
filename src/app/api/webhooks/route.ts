@@ -52,7 +52,6 @@ export async function POST (req: Request) {
 
   // Do something with the payload
   // For this guide, you simply log the payload to the console
-  console.log(evt.data)
 
   if (evt.type === 'user.created') {
     console.log('Created a user')
