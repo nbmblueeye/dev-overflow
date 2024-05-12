@@ -9,7 +9,6 @@ export const createUser = async (params: createUserParams) => {
   try {
     connectToMongoDB()
     const user = await User.create(params)
-    console.log('User created')
     return user
   } catch (error) {
     throw new Error('Error Creating User: ' + error)
@@ -29,7 +28,6 @@ export const updateUser = async (params: updateUserParams) => {
     )
 
     revalidatePath(path)
-    console.log('User updated')
     return user
   } catch (error) {
     throw new Error('Error Creating User: ' + error)
@@ -53,7 +51,6 @@ export const deleteUser = async (params: deleteUserParams) => {
 
     const user = await User.findByIdAndDelete(isUserExist._id)
     revalidatePath(path)
-    console.log('User deleted')
     return user
   } catch (error) {
     throw new Error('Error Creating User: ' + error)
