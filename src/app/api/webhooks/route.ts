@@ -54,7 +54,6 @@ export async function POST (req: Request) {
   // For this guide, you simply log the payload to the console
 
   if (evt.type === 'user.created') {
-    console.log('Created a user')
     const { id, email_addresses, username, first_name, last_name, image_url } = evt.data
     const mongoUser = await createUser({
       clerkId: id,
@@ -68,7 +67,6 @@ export async function POST (req: Request) {
   }
 
   if (evt.type === 'user.updated') {
-    console.log('updated a User')
     const { id, email_addresses, username, first_name, last_name, image_url } = evt.data
     const mongoUser = await updateUser({
       clerkId: id,
@@ -86,10 +84,7 @@ export async function POST (req: Request) {
 
   if (evt.type === 'user.deleted') {
     const { id } = evt.data
-    const user = await deleteUser({ clerkId: id!, path: `profile/${id}` })
-
-    return new Response(JSON.stringify(user), { status: 200 })
+    await deleteUser({ clerkId: id!, path: `profile/${id}` })
+    return NextResponse.json({ message: 'OK' })
   }
-
-  return NextResponse.json({ message: 'OK' })
 }

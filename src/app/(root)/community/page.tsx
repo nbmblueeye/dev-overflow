@@ -2,7 +2,7 @@
 import { getAllUsers } from '@/backend/controllers/user.controller'
 /* eslint-disable @next/next/no-async-client-component */
 
-// import FilterSelect from '@/components/shares/FilterSelect'
+import FilterSelect from '@/components/shares/FilterSelect'
 import LocalSearch from '@/components/shares/searchs/LocalSearch'
 import { useEffect } from 'react'
 
@@ -19,7 +19,7 @@ export default async function Page () {
         <h2 className="text-light900_dark100 font-inter text-3xl font-bold">All User</h2>
         <div className="flex flex-row gap-10 max-sm:flex-wrap md:flex-col">
             <LocalSearch/>
-            {/* <FilterSelect/> */}
+            <FilterSelect/>
         </div>
         <div className="flex flex-col gap-10">
         </div>
