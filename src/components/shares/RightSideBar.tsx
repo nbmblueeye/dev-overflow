@@ -33,9 +33,15 @@ const RightSideBar = () => {
         <h3 className="text-light900_dark300 mb-8 px-4 font-inter text-xl font-bold">Popular Tags</h3>
         <div className="flex flex-col gap-6">
           {
-            popularTags.map((popularTag:any, index:any) => {
+            popularTags.map((tag:any, index:any) => {
               return (
-                <RenderTag key={index} {...popularTag}/>
+                <RenderTag key={index}
+                  _id={tag._id}
+                  showCount={true}
+                  totalQuestion={tag.totalQuestion}
+                  name={tag.name}
+                  addClass="uppercase"
+                />
               )
             }
             )
