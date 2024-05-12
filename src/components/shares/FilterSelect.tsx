@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { filters } from '@/constants'
 import { useSearchParams, useRouter } from 'next/navigation'

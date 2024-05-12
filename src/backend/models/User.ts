@@ -17,7 +17,7 @@ import { Schema, Document, models, model } from 'mongoose'
 
 const userSchema = new Schema({
   clerkId: { type: String, required: true },
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: false },
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String },
