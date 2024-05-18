@@ -1,28 +1,31 @@
-import { popularTags, questions } from '@/constants'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import RenderTag from './RenderTag'
+import { getHotQuestion } from '@/backend/controllers/question.controller'
+import { getPopularTags } from '@/backend/controllers/tag.controller'
+import { formatNumber } from '@/lib/utils'
 
-const RightSideBar = () => {
+const RightSideBar = async () => {
+  const hotQuestions = await getHotQuestion()
+  const popularTags = await getPopularTags()
   return (
     <section className='custom-scroll border-light800_dark200 sticky right-0 top-0 z-0 h-[calc(100vh-80px)] overflow-y-auto border-l px-4 pb-8 pt-10 shadow-light-100 dark:shadow-dark-100 max-lg:hidden lg:w-[350px]'>
       <div className="mb-12 w-full">
         <h3 className="text-light900_dark300 mb-4 px-4 font-inter text-xl font-bold">Top Questions</h3>
         {
-          questions.map((question:any, index:any) => {
+          hotQuestions.length &&
+          hotQuestions.map((question:any, index:any) => {
             return (
-              <Link key={index} href={`questions/${question._id}`} className="hover-light700_dark400 mb-2 flex flex-row items-center justify-between p-4">
-
-                  <p className="text-light800_dark200 font-inter text-sm font-medium">{question.title}</p>
-                  <Image
-                    src='/assets/icons/chevron-right.svg'
-                    width={20}
-                    height={20}
-                    alt="chevron-right"
-                    className='inverted-colors'
-                  />
-
+              <Link key={index} href={`/question/${question._id}`} className="hover-light700_dark400 mb-2 flex flex-row items-center justify-between p-4">
+                <p className="text-light800_dark200 font-inter text-sm font-medium">{question.title}</p>
+                <Image
+                  src='/assets/icons/chevron-right.svg'
+                  width={20}
+                  height={20}
+                  alt="chevron-right"
+                  className='inverted-colors'
+                />
               </Link>
             )
           }
@@ -36,11 +39,11 @@ const RightSideBar = () => {
             popularTags.map((tag:any, index:any) => {
               return (
                 <RenderTag key={index}
-                  _id={tag._id}
+                  link={`/tags/${tag._id}`}
                   showCount={true}
-                  totalQuestion={tag.totalQuestion}
+                  totalQuestion={formatNumber(tag.numberOfQuestions)}
                   name={tag.name}
-                  addClass="uppercase"
+                  addClass="uppercase px-4 py-2"
                 />
               )
             }

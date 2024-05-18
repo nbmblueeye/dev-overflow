@@ -1,4 +1,4 @@
-import { Tag, Question, SidebarLink, QuestionCard } from '@/types/type'
+import { Tag, Question, SidebarLink, QuestionCard, Filter } from '@/types/type'
 
 export const themes = [
   { value: 'light', label: 'Light', icon: '/assets/icons/sun.svg' },
@@ -98,7 +98,7 @@ export const popularTags: Tag[] = [
   }
 ]
 
-export const filters: Tag[] = [
+export const filters:Filter[] = [
   {
     _id: 'newest',
     name: 'newest'
@@ -206,3 +206,5 @@ export const questionCards: QuestionCard[] = [
     createdAt: '2024-08-05 07:32:55 AM'
   }
 ]
+
+export const interactedTags = [{ _id: '1', name: 'nodejs' }, { _id: '2', name: 'html' }, { _id: '3', name: 'css' }]

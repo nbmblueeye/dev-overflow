@@ -1,17 +1,25 @@
-import { FormQuestion } from '@/components/shares/FormQuestion'
+import { getUserByClerkId } from '@/backend/controllers/user.controller'
+import { FormQuestion } from '@/components/form/FormQuestion'
+import { auth } from '@clerk/nextjs/server'
 import React from 'react'
 
-const page = () => {
+const Page = async () => {
+  const { userId } = auth()
+  if (!userId) return null
+  const mongoUser = await getUserByClerkId({ clerkId: userId })
   return (
     <div className="flex w-full flex-col gap-10">
       <h1 className="text-light900_dark100 font-inter text-3xl font-bold">
         Ask a public question
       </h1>
       <div>
-        <FormQuestion/>
+        <FormQuestion
+        userId={ JSON.stringify(mongoUser._id) }
+        type="Add"
+        />
       </div>
     </div>
   )
 }
 
-export default page
+export default Page
