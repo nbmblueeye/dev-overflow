@@ -1,26 +1,25 @@
 'use client'
 import React from 'react'
 import { Badge } from '../ui/badge'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 type Props = {
-  _id: string,
+  link: string,
   name: string,
   showCount?:boolean,
-  totalQuestion?:number,
+  totalQuestion?:string,
   addClass: string,
 }
 
-const RenderTag = ({ _id, name, showCount, totalQuestion, addClass }:Props) => {
+const RenderTag = ({ link, name, showCount, totalQuestion, addClass }:Props) => {
+  const router = useRouter()
   return (
-    <div className="flex flex-row items-center justify-between">
-      <Link href={`tags/${_id}`}>
-        <Badge className={`background-light800_dark300 text-light500_dark400 hover-light700_dark400 rounded-md px-4 py-2 font-inter text-xs font-medium shadow ${addClass}`}>
-          {name}
-        </Badge>
-      </Link>
-      {
-        showCount && <p className="text-light800_dark200 font-inter text-xs font-medium">{totalQuestion}</p>
+    <div className="z-50 flex flex-row items-center justify-between" onClick={() => { router.push(link) } }>
+      <Badge className={`background-light800_dark300 text-light500_dark400 hover-light700_dark400 rounded-md font-inter text-xs font-medium shadow ${addClass}`}>
+        {name}
+      </Badge>
+      {showCount &&
+      (<p className="text-light800_dark200 font-inter text-xs font-medium">{totalQuestion}</p>)
       }
     </div>
   )

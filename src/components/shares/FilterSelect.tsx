@@ -1,9 +1,6 @@
 'use client'
-
 import React from 'react'
-import { filters } from '@/constants'
-import { useSearchParams, useRouter } from 'next/navigation'
-import qs from 'query-string'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 
 import {
   Select,
@@ -12,26 +9,41 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { addQueryUrl, removeQueryUrl } from '@/lib/utils'
 
-const FilterSelect = () => {
+type Props = {
+  addClass: string,
+  filters: any[],
+  route?: string
+}
+
+const FilterSelect = ({ addClass, filters, route }:Props) => {
   const searchParams = useSearchParams()
   const router = useRouter()
-
+  const pathName = usePathname()
   const handleFilterTag = (value:string) => {
-    const params = qs.parse(searchParams.toString())
-    params.filter = value
-    const searchUrl = qs.stringifyUrl(
-      {
-        url: window.location.pathname,
-        query: params
+    if (value !== '') {
+      const newUrl = addQueryUrl({
+        params: searchParams.toString(),
+        key: 'filter',
+        value
+      })
+      router.push(newUrl, { scroll: false })
+    } else {
+      console.log(route, pathName)
+      if (route === pathName) {
+        const newUrl = removeQueryUrl({
+          params: searchParams.toString(),
+          keyToRemove: ['filter']
+        })
+        router.push(newUrl, { scroll: false })
       }
-    )
-    router.push(searchUrl, { scroll: false })
+    }
   }
 
   return (
     <Select onValueChange={handleFilterTag} defaultValue={searchParams.get('filter') || undefined}>
-        <SelectTrigger className="max-w-[200px] capitalize md:hidden ">
+        <SelectTrigger className={ `max-w-[200px] ${addClass}` }>
             <SelectValue placeholder="Select a filter" />
         </SelectTrigger>
         <SelectContent>

@@ -23,14 +23,19 @@ export type User = {
     clerkId?: string,
 }
 
-export type QuestionCard = {
+export interface QuestionCard{
     _id: string,
     title: string,
     description: string,
     tags: Tag[],
+    author: User,
     votes:number,
     answers:number,
     views:number,
-    author: User,
     createdAt: string,
+}
+
+export interface Filter{
+    _id: string,
+    name: string
 }

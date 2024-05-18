@@ -1,96 +1,78 @@
 /* eslint-disable @next/next/no-async-client-component */
+import { getAllQuestions } from '@/backend/controllers/question.controller'
+import EmptyResult from '@/components/EmptyResult'
+import QuestionCard from '@/components/cards/QuestionCard'
 import ButtonC from '@/components/shares/ButtonC'
 import FilterHome from '@/components/shares/FilterHome'
 import FilterSelect from '@/components/shares/FilterSelect'
-import MetaTag from '@/components/shares/MetaTag'
-import RenderTag from '@/components/shares/RenderTag'
+import Pagination from '@/components/shares/Pagination'
 import LocalSearch from '@/components/shares/searchs/LocalSearch'
-import { questionCards } from '@/constants'
+import { filters } from '@/constants'
 
-export default function Home () {
-  // useEffect(() => {
-  //   const initUser = async () => {
-  //     await getAllUsers()
-  //   }
-  //   initUser()
-  // }, [])
+const Home = async ({ searchParams }:{ searchParams:{[key:string]:string} }) => {
+  const results = await getAllQuestions({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
+    pageSize: 20
+  })
 
   return (
+    <>
     <div className="flex w-full flex-col gap-10">
       <div className="flex w-full flex-wrap items-center justify-between gap-10">
         <h2 className="text-light900_dark100 font-inter text-3xl font-bold">All Questions</h2>
         <ButtonC
          name="Ask a Question"
-         link="/"
+         link="/ask-question"
         />
       </div>
       <div className="flex flex-row gap-10 max-sm:flex-wrap md:flex-col">
-        <LocalSearch/>
+        <LocalSearch
+          route='/'
+        />
         <FilterHome />
-        <FilterSelect/>
+        <FilterSelect
+          filters={filters}
+          addClass='Capitalize md:hidden'
+          route='/'
+        />
       </div>
       <div className="flex flex-col gap-10">
         {
-          questionCards.map((questionCard, index) => {
-            return (
-              <div key={index} className="text-light800_dark200 border-light700_dark400 rounded-md border px-10 py-8 font-inter text-xl font-semibold shadow-light-100 dark:shadow-dark-100">
-                <h3 className="text-light900_dark300 mb-6 font-inter text-xl font-bold">
-                  {questionCard.title}
-                </h3>
-                <div className="flex flex-row flex-wrap gap-4">
-                {
-                  questionCard.tags.length > 0 && questionCard.tags.map((tag, index) => {
-                    return (
-                      <RenderTag key={index}
-                        _id={tag._id}
-                        name={tag.name}
-                        addClass="uppercase"
-                      />
-                    )
-                  })
-                }
-                </div>
-                <div className="mt-8 flex flex-row flex-wrap items-end justify-between">
-                    <MetaTag
-                      metaLink="#"
-                      iconUrl={questionCard.author.picture ? questionCard.author.picture : '/assets/icons/avatar.svg'}
-                      textSize="font-medium text-base"
-                      data={`${questionCard.author.name} . `}
-                      title={`askedAt ${questionCard.createdAt}`}
-                      imageClass="inverted-colors"
-                    />
-                    <div className="flex flex-row flex-wrap gap-6">
-                      <MetaTag
-                        metaLink=""
-                        iconUrl="/assets/icons/like.svg"
-                        textSize="font-normal text-xs"
-                        data={`${questionCard.votes} `}
-                        title=" Votes"
-                        imageClass="accent-blue"
-                      />
-                      <MetaTag
-                        metaLink=""
-                        iconUrl="/assets/icons/message.svg"
-                        textSize="font-normal text-xs"
-                        data={`${questionCard.answers} `}
-                        title=" Answers"
-                        imageClass="accent-blue"
-                      />
-                      <MetaTag
-                        metaLink=""
-                        iconUrl="/assets/icons/eye.svg"
-                        textSize="font-normal text-xs"
-                        data={`${questionCard.answers} `}
-                        title=" Views"
-                        imageClass="accent-blue"
-                      />
-                    </div>
-                </div>
-              </div>
-            )
-          })
+          results?.questions.length > 0
+            ? results?.questions.map((question) => {
+              return (
+              <QuestionCard
+                key={question._id}
+                id={question._id}
+                title={question.title}
+                tags={question.tags}
+                author={question.author}
+                upvotes={question.upvotes}
+                answers={question.answers}
+                views={question.views}
+                createdAt={question.createdAt}
+              />
+              )
+            })
+            : <EmptyResult
+              title="No question available"
+              description='Be the first to break the silence! 🚀 Ask a Question and kickstart the discussion. our query could be the next big thing others learn from. Get involved! 💡'
+              buttonText='Go to Question'
+              link='/ask-question'
+            />
         }
       </div>
     </div>
+    <div className="mt-10 flex w-full justify-center">
+      <Pagination
+      pageNumber={ searchParams.page ? +searchParams.page : 1 }
+      hasNextPage={ results.isNextPage }
+      />
+    </div>
+    </>
   )
 }
+
+export default Home

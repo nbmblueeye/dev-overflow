@@ -10,12 +10,12 @@ import { Schema, Document, models, model } from 'mongoose'
     picture?: string,
     location?: string,
     portfolioWebsite?: string,
-    reputation?: number,
+    reputation: number,
     saved?: Schema.Types.ObjectId[],
     joinedAt: Date,
   }
 
-const userSchema = new Schema({
+const userSchema = new Schema< IUser >({
   clerkId: { type: String, required: true },
   name: { type: String, required: true, unique: false },
   username: { type: String, required: true, unique: true },
@@ -25,7 +25,7 @@ const userSchema = new Schema({
   picture: { type: String },
   location: { type: String },
   portfolioWebsite: { type: String },
-  reputation: { type: String, default: 0 },
+  reputation: { type: Number, default: 0 },
   saved: [{ type: Schema.Types.ObjectId, ref: 'Question' }],
   joinedAt: { type: Date, default: Date.now() }
 })
