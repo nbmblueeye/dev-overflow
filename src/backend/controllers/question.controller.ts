@@ -43,7 +43,7 @@ const createQuestion = async (params: createQuestionParams) => {
       tag: tagForQuestion
     })
     // add new question reputation to question author
-    await User.findByIdAndUpdate(author, { $inc: { reputation: 1 } })
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } })
 
     revalidatePath(path)
   } catch (error) {
@@ -205,6 +205,12 @@ const questionUpVotes = async (params: getQuestionVotesParams) => {
       throw new Error('Question not found')
     }
 
+    // If user adding upvote
+    await User.findByIdAndUpdate(userId, { $inc: { reputation: isUpvoted ? 1 : -1 } })
+
+    // If user is upvoted
+    await User.findByIdAndUpdate(question.author, { $inc: { reputation: isUpvoted ? 10 : -10 } })
+
     revalidatePath(path)
   } catch (error) {
     throw new Error('Error get question upvote: ' + error)
@@ -235,6 +241,13 @@ const questionDownVotes = async (params: getQuestionVotesParams) => {
     if (!question) {
       throw new Error('Question not found')
     }
+
+    // If user adding upvote
+    await User.findByIdAndUpdate(userId, { $inc: { reputation: isDownvoted ? -1 : 1 } })
+
+    // If user is upvoted
+    await User.findByIdAndUpdate(question.author, { $inc: { reputation: isDownvoted ? -10 : 10 } })
+
     revalidatePath(path)
   } catch (error) {
     throw new Error('Error get question downvote: ' + error)

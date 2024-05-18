@@ -30,7 +30,6 @@ export const updateUser = async (params: updateUserParams) => {
         new: true
       }
     )
-
     revalidatePath(path)
     return user
   } catch (error) {
