@@ -1,5 +1,4 @@
-import { getAllCountries } from '@/backend/controllers/country.controller'
-import { getAllJobs } from '@/backend/controllers/jobs.controller'
+import { getAllCountries, getAllJobs, getCurrentCountry } from '@/backend/controllers/jobs.controller'
 import EmptyResult from '@/components/EmptyResult'
 import JobCard from '@/components/cards/JobCard'
 import CountryFilter from '@/components/shares/CountryFilter'
@@ -8,25 +7,27 @@ import LocalSearch from '@/components/shares/searchs/LocalSearch'
 import React from 'react'
 
 const Page = async ({ searchParams }:{searchParams:{[key:string]:string} }) => {
-  const results = await getAllJobs({
+  const country = await getCurrentCountry()
+  const countries = await getAllCountries()
+
+  let { jobs, isNextPage }:any = await getAllJobs({
     type: 'search',
-    query: searchParams.q ? searchParams.q : 'web developer',
-    search: searchParams.q,
-    location: searchParams.location,
-    page: searchParams.page ? +searchParams.page : 1,
+    query: searchParams.q || '',
+    location: searchParams.location || country.country,
+    page: +searchParams.page || 1,
     pageSize: 10
   })
 
-  const countries = await getAllCountries()
-
-  const jobs = results?.jobs.map((result:any) => {
-    countries.forEach((item:any) => {
-      if (item.cca2 === result.job_country) {
-        result = { ...result, ...{ job_country: item.name.common, flag: item.flags.png } }
-      }
+  if (jobs && countries) {
+    jobs = jobs.map((job:any) => {
+      countries.forEach((item:any) => {
+        if (item.cca2 === job.job_country) {
+          job = { ...job, ...{ job_country: item.name.common, flag: item.flags.png } }
+        }
+      })
+      return job
     })
-    return result
-  })
+  }
 
   return (
     <>
@@ -40,11 +41,12 @@ const Page = async ({ searchParams }:{searchParams:{[key:string]:string} }) => {
               filters={countries}
               addClass='Capitalize'
               route='/collection'
+              location={country}
             />
           </div>
           <div className="flex flex-col gap-8">
             {
-             jobs?.length > 0
+             jobs.length > 0
                ? jobs.map((job:any) => {
                  return (
                    <JobCard key={job.job_id}
@@ -78,8 +80,8 @@ const Page = async ({ searchParams }:{searchParams:{[key:string]:string} }) => {
       </div>
       <div className="mt-10 flex w-full justify-center">
         <Pagination
-          pageNumber={ searchParams.page ? +searchParams.page : 1 }
-          hasNextPage={ results ? results.isNextPage : false }
+          pageNumber={ +searchParams.page || 1 }
+          hasNextPage={ isNextPage || false }
         />
       </div>
     </>

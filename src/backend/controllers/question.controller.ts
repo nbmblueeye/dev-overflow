@@ -358,12 +358,13 @@ const deleteQuestionById = async (params: deleteQuestionByIdParams) => {
 const getHotQuestion = async () => {
   try {
     await connectToMongoDB()
-
     const hotQuestions = await Question.find({})
       .sort({ views: -1, upvotes: -1 })
       .limit(5)
 
-    return hotQuestions
+    if (hotQuestions.length > 0) {
+      return hotQuestions
+    }
   } catch (error) {
     throw new Error('Error get hot question: ' + error)
   }
