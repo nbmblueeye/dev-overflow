@@ -15,10 +15,11 @@ import Image from 'next/image'
 type Props = {
   filters: any,
   addClass: string,
-  route?: string
+  route?: string,
+  location?: any
 }
 
-const CountryFilter = ({ filters, addClass, route }:Props) => {
+const CountryFilter = ({ filters, addClass, route, location }:Props) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathName = usePathname()
@@ -42,7 +43,7 @@ const CountryFilter = ({ filters, addClass, route }:Props) => {
   }
 
   return (
-        <Select onValueChange={handleFilterTag} defaultValue={searchParams.get('filter') || undefined}>
+        <Select onValueChange={handleFilterTag} defaultValue={ searchParams.get('filter') || location.country }>
             <SelectTrigger className={ `max-w-[250px] ${addClass}` }>
                 <Image
                     src='/assets/icons/location.svg'
@@ -50,7 +51,7 @@ const CountryFilter = ({ filters, addClass, route }:Props) => {
                     height={20}
                     alt='location'
                 />
-                <SelectValue placeholder="Select a Country" />
+                <SelectValue placeholder={location.country} />
             </SelectTrigger>
             <SelectContent>
                 {

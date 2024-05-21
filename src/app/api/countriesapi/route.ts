@@ -10,5 +10,6 @@ export const GET = async (request: Request) => {
     return NextResponse.json(data)
   } catch (error) {
     console.error(error)
+    return NextResponse.json(error)
   }
 }
