@@ -361,10 +361,7 @@ const getHotQuestion = async () => {
     const hotQuestions = await Question.find({})
       .sort({ views: -1, upvotes: -1 })
       .limit(5)
-
-    if (hotQuestions.length > 0) {
-      return hotQuestions
-    }
+    return hotQuestions
   } catch (error) {
     throw new Error('Error get hot question: ' + error)
   }
