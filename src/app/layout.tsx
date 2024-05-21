@@ -7,6 +7,7 @@ import './globals.css'
 import '../styles/prismjs.css'
 import ThemeContext from '@/context/ThemeContext'
 import React from 'react'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'], variable: '--inter-font' })
 
@@ -40,6 +41,7 @@ export default function RootLayout ({
             <NavBar/>
             {children}
           </ThemeContext>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

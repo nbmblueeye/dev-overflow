@@ -4,8 +4,13 @@ import Pagination from '@/components/shares/Pagination'
 import LocalSearch from '@/components/shares/searchs/LocalSearch'
 import { Badge } from '@/components/ui/badge'
 import { TagFilters } from '@/constants/filter'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'
+
+export const metadata: Metadata = {
+  title: 'DevFlow | Tag'
+}
 
 export default async function Page ({ searchParams }:{searchParams:{[key:string]:string} }) {
   const results = await getAllTags({

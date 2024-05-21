@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { answerDownVotes, answerUpVotes } from '@/backend/controllers/answer.controller'
 import { savedQuestionToUser } from '@/backend/controllers/user.controller'
 import { addUserViewQuestion } from '@/backend/controllers/interaction.controller'
+import { useToast } from '../ui/use-toast'
 
 type Props = {
     type:string,
@@ -30,7 +31,14 @@ const Vote = ({
   isSaved
 }:Props) => {
   const pathName = usePathname()
+  const { toast } = useToast()
   const handleVoted = async (action:string) => {
+    if (!userId) {
+      return toast({
+        title: 'User not found',
+        description: 'Please login to vote'
+      })
+    }
     if (type === 'Question') {
       if (action === 'upvote') {
         await questionUpVotes({
@@ -70,14 +78,29 @@ const Vote = ({
         })
       }
     }
+
+    return toast({
+      title: 'Success',
+      description: 'Voted is done'
+    })
   }
 
   const handleSavedQuestion = async () => {
+    if (!userId) {
+      return toast({
+        title: 'User not found',
+        description: 'Please login to save question'
+      })
+    }
     await savedQuestionToUser({
       userId: JSON.parse(userId),
       questionId: JSON.parse(itemId),
       isSavedQuestion: isSaved!,
       path: pathName
+    })
+    return toast({
+      title: 'Success',
+      description: 'saved question'
     })
   }
 

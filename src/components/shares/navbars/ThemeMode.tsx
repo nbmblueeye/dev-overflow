@@ -29,7 +29,7 @@ const ThemeMode = () => {
             />
 
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="background-light800_dark200 border-light700_dark400 flex flex-col border">
+          <NavigationMenuContent className="flex flex-col">
             <NavigationMenuLink>
               {
                 themes.map((theme:any, index:any) => (

@@ -9,6 +9,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Link from 'next/link'
 import QuestionTab from '@/components/shares/QuestionTab'
 import AnswerTab from '@/components/shares/AnswerTab'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'DevFlow | Profile'
+}
 
 type Props = {
   params: {id: string},
@@ -16,7 +21,7 @@ type Props = {
 }
 
 const Page = async ({ params, searchParams }:Props) => {
-  const { user, totalUserQuestion, totalUserAnswer } = await getUserInfoByClerkId({ clerkId: params.id })
+  const { user, totalUserQuestion, totalUserAnswer, badges } = await getUserInfoByClerkId({ clerkId: params.id })
   return (
     <div>
       <div className="flex flex-row justify-between gap-4">
@@ -83,17 +88,17 @@ const Page = async ({ params, searchParams }:Props) => {
             </div>
             <StatsCard
             imgUrl='/assets/icons/gold-medal.svg'
-            value={0}
+            value={badges.GOLD}
             title='Gold Badges'
             />
             <StatsCard
             imgUrl='/assets/icons/silver-medal.svg'
-            value={0}
+            value={badges.SILVER}
             title='Silver Badges'
             />
             <StatsCard
             imgUrl='/assets/icons/bronze-medal.svg'
-            value={0}
+            value={badges.BRONZE}
             title='Bronze Badges'
             />
           </div>

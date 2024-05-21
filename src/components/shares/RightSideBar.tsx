@@ -10,7 +10,7 @@ const RightSideBar = async () => {
   const hotQuestions = await getHotQuestion()
   const popularTags = await getPopularTags()
   return (
-    <section className='custom-scroll border-light800_dark200 sticky right-0 top-0 z-0 h-[calc(100vh-80px)] overflow-y-auto border-l px-4 pb-8 pt-10 shadow-light-100 dark:shadow-dark-100 max-lg:hidden lg:w-[350px]'>
+    <section className='custom-scroll border-light800_dark200 sticky right-0 top-0 z-0 hidden h-[calc(100vh-80px)] overflow-y-auto border-l px-4 pb-8 pt-10 shadow-light-100 dark:shadow-dark-100 lg:w-[350px] xl:block'>
       <div className="mb-12 w-full">
         <h3 className="text-light900_dark300 mb-4 px-4 font-inter text-xl font-bold">Top Questions</h3>
         {

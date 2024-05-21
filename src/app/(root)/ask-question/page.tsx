@@ -1,7 +1,12 @@
 import { getUserByClerkId } from '@/backend/controllers/user.controller'
 import { FormQuestion } from '@/components/form/FormQuestion'
 import { auth } from '@clerk/nextjs/server'
+import { Metadata } from 'next'
 import React from 'react'
+
+export const metadata: Metadata = {
+  title: 'DevFlow | Ask Question'
+}
 
 const Page = async () => {
   const { userId } = auth()

@@ -1,12 +1,12 @@
 import { Schema, Document, models, model } from 'mongoose'
 
 interface IAnswer extends Document {
-    author: Schema.Types.ObjectId;
-    question: Schema.Types.ObjectId,
-    content: string,
-    upvotes: Schema.Types.ObjectId[],
-    downvotes: Schema.Types.ObjectId[],
-  }
+  author: Schema.Types.ObjectId;
+  question: Schema.Types.ObjectId,
+  content: string,
+  upvotes: Schema.Types.ObjectId[],
+  downvotes: Schema.Types.ObjectId[],
+}
 
 const answerSchema = new Schema< IAnswer >({
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },

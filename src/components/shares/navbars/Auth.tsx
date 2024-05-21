@@ -11,22 +11,22 @@ import { dark } from '@clerk/themes'
 const Auth = () => {
   const { activeTheme } = useThemeContext()
   return (
-        <>
-            <SignedIn>
-                <UserButton
-                afterSignOutUrl="/"
-                appearance={{
-                  elements: {
-                    avatarBox: 'h-10 w-10'
-                  },
-                  variables: {
-                    colorPrimary: '#ff7000'
-                  },
-                  baseTheme: activeTheme.value === 'dark' ? dark : undefined
-                }}
-                />
-            </SignedIn>
-        </>
+    <>
+      <SignedIn>
+          <UserButton
+          afterSignOutUrl="/"
+          appearance={{
+            elements: {
+              avatarBox: 'h-10 w-10'
+            },
+            variables: {
+              colorPrimary: '#ff7000'
+            },
+            baseTheme: activeTheme.value === 'dark' ? dark : undefined
+          }}
+          />
+      </SignedIn>
+    </>
   )
 }
 

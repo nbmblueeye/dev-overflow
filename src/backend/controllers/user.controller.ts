@@ -2,11 +2,12 @@
 import { revalidatePath } from 'next/cache'
 import connectToMongoDB from '../config/db'
 import User from '../models/User'
-import { createUserParams, deleteUserParams, editUserProfileParams, getAllSavedQuestionToUserParams, getAllUsersParams, getHandleSavedQuestionParams, getUserByIdParams, updateUserParams } from '../type'
+import { badgeKeyTypes, createUserParams, deleteUserParams, editUserProfileParams, getAllSavedQuestionToUserParams, getAllUsersParams, getHandleSavedQuestionParams, getUserByIdParams, updateUserParams } from '../type'
 import Question from '../models/Question'
 import Tag from '../models/Tag'
 import Answer from '../models/Answer'
 import { FilterQuery } from 'mongoose'
+import { assignBadges } from '@/lib/utils'
 
 export const createUser = async (params: createUserParams) => {
   try {
@@ -63,7 +64,6 @@ export const deleteUser = async (params: deleteUserParams) => {
 export async function getAllUsers (params: getAllUsersParams) {
   try {
     connectToMongoDB()
-
     const { searchQuery, filter, page = 1, pageSize = 10 } = params
     const skipPage = (page - 1) * pageSize
 
@@ -74,7 +74,6 @@ export async function getAllUsers (params: getAllUsersParams) {
         { username: { $regex: new RegExp(searchQuery, 'i') } }
       ]
     }
-
     let sortOption:any = {}
     switch (filter) {
       case 'new_users':
@@ -205,10 +204,54 @@ export async function getUserInfoByClerkId (params: getUserByIdParams) {
     const totalUserQuestion = await Question.countDocuments({ author: user._id })
     const totalUserAnswer = await Answer.countDocuments({ author: user._id })
 
+    let sumQUpvotes = 0
+    const [questionUpvotes] = await Question.aggregate([
+      { $match: { author: user._id } },
+      { $project: { _id: 0, totalUpvotes: { $size: { $ifNull: ['$upvotes', []] } } } },
+      { $group: { _id: null, sumUpvotes: { $sum: '$totalUpvotes' } } }
+    ])
+    // Check if answerUpvotes is defined before accessing its properties
+    if (questionUpvotes && questionUpvotes.sumUpvotes !== undefined) {
+      sumQUpvotes = questionUpvotes.sumUpvotes
+    }
+
+    let sumUpvotes = 0
+    const [answerUpvotes] = await Answer.aggregate([
+      { $match: { author: user._id } },
+      { $project: { _id: 0, totalUpvotes: { $size: { $ifNull: ['$upvotes', []] } } } },
+      { $group: { _id: null, sumUpvotes: { $sum: '$totalUpvotes' } } }
+    ])
+    // Check if answerUpvotes is defined before accessing its properties
+    if (answerUpvotes && answerUpvotes.sumUpvotes !== undefined) {
+      sumUpvotes = answerUpvotes.sumUpvotes
+    }
+
+    let sumViews = 0
+    const [questionViews] = await Question.aggregate([
+      { $match: { author: user._id } },
+      { $group: { _id: null, sumViews: { $sum: '$views' } } }
+    ])
+
+    // Check if answerUpvotes is defined before accessing its properties
+    if (questionViews && questionViews.sumViews !== undefined) {
+      sumViews = questionViews.sumViews
+    }
+
+    const criterias = [
+      { type: 'QUESTION_COUNT' as badgeKeyTypes, count: totalUserQuestion },
+      { type: 'ANSWER_COUNT' as badgeKeyTypes, count: totalUserAnswer },
+      { type: 'QUESTION_UPVOTES' as badgeKeyTypes, count: sumQUpvotes },
+      { type: 'ANSWER_UPVOTES' as badgeKeyTypes, count: sumUpvotes },
+      { type: 'TOTAL_VIEWS' as badgeKeyTypes, count: sumViews }
+    ]
+
+    const badges = assignBadges(criterias)
+
     return {
       user,
       totalUserQuestion,
-      totalUserAnswer
+      totalUserAnswer,
+      badges
     }
   } catch (error) {
     throw new Error('Error Creating User: ' + error)

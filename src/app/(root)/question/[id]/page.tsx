@@ -12,7 +12,12 @@ import { AnswerFilters } from '@/constants/filter'
 import changeTimeToHumenRead from '@/lib/TimeFormat'
 import { formatNumber } from '@/lib/utils'
 import { auth } from '@clerk/nextjs/server'
+import { Metadata } from 'next'
 import React from 'react'
+
+export const metadata: Metadata = {
+  title: 'DevFlow | Question'
+}
 
 type Props = {
   params:{id:string},
@@ -135,7 +140,8 @@ const Page = async ({ params, searchParams }:Props) => {
       }
       <FormAnswer
         author={JSON.stringify(user._id)}
-        question={JSON.stringify(results.question._id)}
+        questionId={JSON.stringify(results.question._id)}
+        question={results.question.description}
       />
    </>
   )
