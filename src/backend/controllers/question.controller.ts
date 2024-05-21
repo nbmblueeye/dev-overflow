@@ -3,7 +3,7 @@ import connectToMongoDB from '../config/db'
 import Question from '../models/Question'
 import Tag from '../models/Tag'
 import { revalidatePath } from 'next/cache'
-import { createQuestionParams, deleteQuestionByIdParams, editQuestionParams, getAllQuestionsParams, getQuestionByIdParams, getQuestionByUserIdParams, getQuestionVotesParams } from '../type'
+import { createQuestionParams, deleteQuestionByIdParams, editQuestionParams, getAllQuestionsParams, getQuestionByIdParams, getQuestionByUserIdParams, getQuestionVotesParams, getRecommentQuestionsParams } from '../type'
 import User from '../models/User'
 import Answer from '../models/Answer'
 import Interaction from '../models/Interaction'
@@ -64,6 +64,7 @@ const getQuestionToEdit = async (id:string) => {
     throw new Error('Error editting question ' + error)
   }
 }
+
 const editQuestion = async (params: editQuestionParams) => {
   try {
     await connectToMongoDB()
@@ -108,9 +109,6 @@ const getAllQuestions = async (params: getAllQuestionsParams) => {
       case 'newest':
         sortOption = { createdAt: -1 }
         break
-      case 'recommended':
-        query.$expr = { $gte: [{ $size: '$upvotes' }, 10] }
-        break
       case 'most_voted':
         sortOption = { upvotes: -1 }
         break
@@ -128,9 +126,66 @@ const getAllQuestions = async (params: getAllQuestionsParams) => {
       .skip(skipPage)
       .limit(pageSize)
       .sort(sortOption)
-    const totalQuestions = await Question.countDocuments()
+    const totalQuestions = await Question.countDocuments(query)
     const isNextPage = totalQuestions > skipPage + questions.length
 
+    return { questions, isNextPage }
+  } catch (error) {
+    throw new Error('Error get all quations: ' + error)
+  }
+}
+
+const getRecommentQuestions = async (params: getRecommentQuestionsParams) => {
+  try {
+    await connectToMongoDB()
+
+    const { userId, searchQuery, page = 1, pageSize = 10 } = params
+
+    const isUser = await User.findOne({ clerkId: userId })
+    if (!isUser) {
+      throw new Error('User for recommendation question not found')
+    }
+
+    const skipPage = (page - 1) * pageSize
+
+    const interactions = await Interaction.find({ user: isUser._id })
+      .populate({ path: 'tags', model: Tag })
+
+    const tags = interactions.reduce((acc, interaction) => {
+      if (interaction.tags) {
+        acc = acc.concat(interaction.tags)
+      }
+      return acc
+    }, [])
+
+    const tagsArr = [
+      // @ts-ignore
+      ...new Set(tags.map((tag) => tag._id))
+    ]
+
+    const query:FilterQuery<typeof Question> = {
+      $and: [
+        { tags: { $in: tagsArr } },
+        { author: { $ne: isUser._id } }
+      ]
+    }
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: searchQuery, $options: 'i' } },
+        { description: { $regex: searchQuery, $options: 'i' } }
+      ]
+    }
+
+    const questions = await Question.find(query)
+      .populate({ path: 'author', model: User })
+      .populate({ path: 'tags', model: Tag })
+      .skip(skipPage)
+      .limit(pageSize)
+
+    const totalQuestions = await Question.countDocuments(query)
+    const isNextPage = totalQuestions > questions.length + skipPage
+    console.log(totalQuestions, isNextPage, skipPage)
     return { questions, isNextPage }
   } catch (error) {
     throw new Error('Error get all quations: ' + error)
@@ -204,12 +259,11 @@ const questionUpVotes = async (params: getQuestionVotesParams) => {
     if (!question) {
       throw new Error('Question not found')
     }
-
     // If user adding upvote
-    await User.findByIdAndUpdate(userId, { $inc: { reputation: isUpvoted ? 1 : -1 } })
+    await User.findByIdAndUpdate(userId, { $inc: { reputation: isUpvoted ? -1 : 1 } })
 
     // If user is upvoted
-    await User.findByIdAndUpdate(question.author, { $inc: { reputation: isUpvoted ? 10 : -10 } })
+    await User.findByIdAndUpdate(question.author, { $inc: { reputation: isUpvoted ? -10 : 10 } })
 
     revalidatePath(path)
   } catch (error) {
@@ -242,11 +296,11 @@ const questionDownVotes = async (params: getQuestionVotesParams) => {
       throw new Error('Question not found')
     }
 
-    // If user adding upvote
-    await User.findByIdAndUpdate(userId, { $inc: { reputation: isDownvoted ? -1 : 1 } })
+    // If user adding downvote
+    await User.findByIdAndUpdate(userId, { $inc: { reputation: isDownvoted ? 2 : -2 } })
 
-    // If user is upvoted
-    await User.findByIdAndUpdate(question.author, { $inc: { reputation: isDownvoted ? -10 : 10 } })
+    // If user is downvote
+    await User.findByIdAndUpdate(question.author, { $inc: { reputation: isDownvoted ? 10 : -10 } })
 
     revalidatePath(path)
   } catch (error) {
@@ -295,6 +349,7 @@ const deleteQuestionById = async (params: deleteQuestionByIdParams) => {
       { $pull: { questions: questionId } }
     )
     revalidatePath(path)
+    return { status: 'deleting' }
   } catch (error) {
     throw new Error('Error delete question: ' + error)
   }
@@ -304,14 +359,14 @@ const getHotQuestion = async () => {
   try {
     await connectToMongoDB()
 
-    const questions = await Question.find()
-      .sort({ upvotes: -1, views: -1 })
+    const hotQuestions = await Question.find({})
+      .sort({ views: -1, upvotes: -1 })
       .limit(5)
 
-    return questions
+    return hotQuestions
   } catch (error) {
     throw new Error('Error get hot question: ' + error)
   }
 }
 
-export { createQuestion, getAllQuestions, getQuestionById, questionUpVotes, questionDownVotes, getQuestionByUserId, deleteQuestionById, getQuestionToEdit, editQuestion, getHotQuestion }
+export { createQuestion, getAllQuestions, getQuestionById, questionUpVotes, questionDownVotes, getQuestionByUserId, deleteQuestionById, getQuestionToEdit, editQuestion, getHotQuestion, getRecommentQuestions }

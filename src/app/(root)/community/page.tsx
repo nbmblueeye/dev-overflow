@@ -6,8 +6,13 @@ import RenderTag from '@/components/shares/RenderTag'
 import LocalSearch from '@/components/shares/searchs/LocalSearch'
 import { interactedTags } from '@/constants'
 import { UserFilters } from '@/constants/filter'
+import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'DevFlow | Community'
+}
 
 export default async function Page ({ searchParams }:{searchParams:{[key:string]:string} }) {
   const results = await getAllUsers({
@@ -16,6 +21,7 @@ export default async function Page ({ searchParams }:{searchParams:{[key:string]
     page: searchParams.page ? +searchParams.page : 1,
     pageSize: 20
   })
+
   return (
     <>
       <div className="flex w-full flex-col gap-10">

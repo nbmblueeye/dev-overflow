@@ -1,3 +1,5 @@
+import { BADGE_CRITERIA } from '@/constants'
+
 export interface createUserParams {
     clerkId?: string,
     name: string,
@@ -71,6 +73,13 @@ export interface editQuestionParams{
 export interface getAllQuestionsParams{
     searchQuery: string,
     filter: string,
+    page?: number,
+    pageSize?: number,
+}
+
+export interface getRecommentQuestionsParams{
+    userId: string,
+    searchQuery: string,
     page?: number,
     pageSize?: number,
 }
@@ -149,3 +158,5 @@ export interface deleteAnswerByIdParams{
     answerId: string,
     path: string,
 }
+
+export type badgeKeyTypes = keyof typeof BADGE_CRITERIA

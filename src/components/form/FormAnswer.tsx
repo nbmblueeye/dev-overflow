@@ -26,13 +26,15 @@ const answerSchema = z.object({
 
 type Props = {
   author:string,
+  questionId:string,
   question:string,
 }
 
-const FormAnswer = ({ author, question }: Props) => {
+const FormAnswer = ({ author, questionId, question }: Props) => {
   const { mode } = useThemeContext()
   const editorRef = useRef(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isOpenAILoading, setIsOpenAILoading] = useState(false)
   const pathName = usePathname()
 
   // 1. Define your form.
@@ -49,7 +51,7 @@ const FormAnswer = ({ author, question }: Props) => {
     try {
       await createAnswer({
         author: JSON.parse(author),
-        question: JSON.parse(question),
+        question: JSON.parse(questionId),
         content: values.content,
         path: pathName
       })
@@ -66,6 +68,32 @@ const FormAnswer = ({ author, question }: Props) => {
     }
   }
 
+  // 3. Open AI
+  const getOpenAIAnswer = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    setIsOpenAILoading(true)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_URL}api/openai`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ question })
+      })
+      const responseData = await response.json()
+      if (responseData.status === 'success') {
+        const editor = editorRef.current as any
+        if (editor) {
+          editor.setContent(responseData.answer.replace(/\n/g, '<br />'))
+        }
+      }
+    } catch (error) {
+      console.log('Open AI error: ' + error)
+    } finally {
+      setIsOpenAILoading(false)
+    }
+  }
+
   return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(addNewAnswer)} className="space-y-8">
@@ -76,15 +104,25 @@ const FormAnswer = ({ author, question }: Props) => {
               <FormItem>
                 <FormLabel className="mb-6 flex flex-row flex-wrap items-center justify-between gap-4">
                   <p className="text-light800_dark200 mb-4 font-inter text-base font-semibold">Write your answer here</p>
-                  <Button className='background-light800_dark300 hover-light700_dark400 rounded-md font-inter text-xs font-medium text-primary-500 shadow'>
-                    <Image
+                  <Button className='background-light800_dark300 hover-light700_dark400 rounded-md font-inter text-xs font-medium text-primary-500 shadow' onClick={(e) => getOpenAIAnswer(e)} disabled={isOpenAILoading}>
+                    {
+                      isOpenAILoading
+                        ? <>
+                        <Spinner addClass='stroke-primary-500 w-[20px] h-[20px]'/>
+                        &nbsp;Generating...
+                      </>
+                        : <>
+                      <Image
                         src='/assets/icons/stars.svg'
                         width={14}
                         height={14}
                         alt="ai answer"
                         className='me-2'
-                    />
-                    Generate AI Answer
+                      />
+                      Generate AI Answer
+                      </>
+                    }
+
                   </Button>
                 </FormLabel>
                 <FormControl className={'no-focus outline-none'}>
@@ -140,8 +178,8 @@ const FormAnswer = ({ author, question }: Props) => {
             {isLoading
               ? (
               <>
-                <Spinner addClass="font-inter text-base font-medium text-primary-100" />
-                Submiting
+                <Spinner addClass='stroke-primary-500 w-[20px] h-[20px]'/>
+                 &nbsp;Submiting
               </>
                 )
               : (

@@ -9,6 +9,7 @@ const Page = async ({ params }:{params:{id:string}}) => {
   if (!userId) return null
   const mongoUser = await getUserByClerkId({ clerkId: userId })
   const question = await getQuestionToEdit(params.id)
+
   return (
     <div className="flex w-full flex-col gap-10">
       <h1 className="text-light900_dark100 font-inter text-3xl font-bold">

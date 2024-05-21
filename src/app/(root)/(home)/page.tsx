@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-async-client-component */
-import { getAllQuestions } from '@/backend/controllers/question.controller'
+import { getAllQuestions, getRecommentQuestions } from '@/backend/controllers/question.controller'
 import EmptyResult from '@/components/EmptyResult'
 import QuestionCard from '@/components/cards/QuestionCard'
 import ButtonC from '@/components/shares/ButtonC'
@@ -8,14 +8,33 @@ import FilterSelect from '@/components/shares/FilterSelect'
 import Pagination from '@/components/shares/Pagination'
 import LocalSearch from '@/components/shares/searchs/LocalSearch'
 import { filters } from '@/constants'
+import { auth } from '@clerk/nextjs/server'
 
 const Home = async ({ searchParams }:{ searchParams:{[key:string]:string} }) => {
-  const results = await getAllQuestions({
-    searchQuery: searchParams.q,
-    filter: searchParams.filter,
-    page: searchParams.page ? +searchParams.page : 1,
-    pageSize: 20
-  })
+  const { userId } = auth()
+  let results
+  if (searchParams.filter === 'recommended') {
+    if (userId) {
+      results = await getRecommentQuestions({
+        userId,
+        searchQuery: searchParams.q,
+        page: searchParams.page ? +searchParams.page : 1,
+        pageSize: 20
+      })
+    } else {
+      results = {
+        questions: [],
+        isNextPage: false
+      }
+    }
+  } else {
+    results = await getAllQuestions({
+      searchQuery: searchParams.q,
+      filter: searchParams.filter,
+      page: searchParams.page ? +searchParams.page : 1,
+      pageSize: 20
+    })
+  }
 
   return (
     <>

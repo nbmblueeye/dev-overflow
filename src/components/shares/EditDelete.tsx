@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 
 import React from 'react'
+import { useToast } from '../ui/use-toast'
 
 type Props = {
   type: string,
@@ -12,20 +13,36 @@ type Props = {
 }
 
 const EditDelete = ({ type, itemId }: Props) => {
+  const { toast } = useToast()
   const router = useRouter()
   const pathName = usePathname()
   const handleDelete = async () => {
     if (type === 'Question') {
-      await deleteQuestionById({
+      const { status } = await deleteQuestionById({
         questionId: JSON.parse(itemId),
         path: pathName
       })
+
+      if (status === 'deleting') {
+        return toast({
+          title: 'Success',
+          description: 'Question is deleted successful'
+        })
+      }
     }
+
     if (type === 'Answer') {
-      await deleteAnswerById({
+      const { status } = await deleteAnswerById({
         answerId: JSON.parse(itemId),
         path: pathName
       })
+
+      if (status === 'deleting') {
+        return toast({
+          title: 'Success',
+          description: 'Answer is deleted successful'
+        })
+      }
     }
   }
 

@@ -11,11 +11,23 @@ const createAnswer = async (params: createAnswerParams) => {
   try {
     connectToMongoDB()
     const { author, question, content, path } = params
-    const newQuestion = await Answer.create({ author, question, content })
-    await Question.findOneAndUpdate(
+    const newAnswer = await Answer.create({ author, question, content })
+    const updatedQuestion = await Question.findOneAndUpdate(
       { _id: question },
-      { $push: { answers: newQuestion._id } }
+      { $push: { answers: newAnswer._id } },
+      { new: true }
     )
+
+    // create new user interaction
+    await Interaction.create({
+      user: author,
+      action: 'Create new answer',
+      question,
+      answer: newAnswer._id,
+      tag: updatedQuestion.tags
+    })
+    // add new question reputation to question author
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } })
 
     revalidatePath(path)
   } catch (error) {
@@ -132,6 +144,7 @@ const deleteAnswerById = async (params: deleteAnswerByIdParams) => {
       { $pull: { answers: answerId } }
     )
     revalidatePath(path)
+    return { status: 'deleting' }
   } catch (error) {
     throw new Error('Error Question: ' + error)
   }

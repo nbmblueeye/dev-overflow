@@ -6,8 +6,12 @@ import Pagination from '@/components/shares/Pagination'
 import LocalSearch from '@/components/shares/searchs/LocalSearch'
 import { QuestionFilters } from '@/constants/filter'
 import { auth } from '@clerk/nextjs/server'
-
+import { Metadata } from 'next'
 import React from 'react'
+
+export const metadata: Metadata = {
+  title: 'DevFlow | Collection'
+}
 
 export default async function Page ({ searchParams }:{searchParams:{[key:string]:string} }) {
   const { userId } = auth()
@@ -20,6 +24,7 @@ export default async function Page ({ searchParams }:{searchParams:{[key:string]
     page: searchParams.page ? +searchParams.page : 1,
     pageSize: 20
   })
+
   return (
     <>
       <div className="flex w-full flex-col gap-10">

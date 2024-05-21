@@ -5,7 +5,7 @@ interface IInteraction extends Document {
     action: string,
     question: Schema.Types.ObjectId,
     answer: Schema.Types.ObjectId,
-    tag: Schema.Types.ObjectId,
+    tags: Schema.Types.ObjectId[],
     createdOn: Date
 }
 
@@ -14,7 +14,7 @@ const interactionSchema = new Schema< IInteraction >({
   action: { type: String, required: true },
   question: { type: Schema.Types.ObjectId, ref: 'Question' },
   answer: { type: Schema.Types.ObjectId, ref: 'Answer' },
-  tag: { type: Schema.Types.ObjectId, ref: 'Tag' },
+  tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
   createdOn: { type: Date, default: Date.now() }
 })
 

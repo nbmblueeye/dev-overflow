@@ -11,7 +11,7 @@ const ButtonC = ({ name, link }:Props) => {
   return (
    <Link href={link}>
       <p
-        className="bg-primary-500 px-4 py-3 font-inter text-base font-medium text-primary-100 hover:text-light-700"
+        className="rounded bg-primary-500 px-4 py-3 font-inter text-base font-medium text-primary-100 hover:text-light-700"
       >
         { name }
       </p>
